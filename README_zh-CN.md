@@ -18,6 +18,18 @@
 
 </div>
 
+> **ℹ️ 衍生版本声明**
+>
+> 本仓库是 [SakiRinn/LiveCaptions-Translator](https://github.com/SakiRinn/LiveCaptions-Translator) 的**修改版本**，遵循 Apache License 2.0。
+>
+> **原作地址：** https://github.com/SakiRinn/LiveCaptions-Translator
+>
+> **本版本的改动：**
+> - 🎤 **语音输入** —— 把实时字幕识别/翻译结果自动输入到当前焦点窗口（全局快捷键开关，支持翻译输入/原文直输两种模式，快捷键可自定义）。
+> - 🌐 **全界面汉化** —— 全部界面文本中文化，支持中英文即时切换。
+>
+> 原代码版权归 SakiRinn 及其他贡献者所有（见 [LICENSE](LICENSE)）。
+
 ## 概述
 
 **✨ LiveCaptions Translator = Windows实时字幕 + 翻译API ✨**

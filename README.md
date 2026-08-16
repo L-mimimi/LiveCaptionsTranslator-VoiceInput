@@ -1,4 +1,4 @@
-﻿<div align="center">
+<div align="center">
 
 <img src="src/LiveCaptions-Translator.ico" width="128" height="128" alt="LiveCaptions-Translator Icon"/>
 
@@ -17,6 +17,18 @@
 **English** | [中文](README_zh-CN.md)
 
 </div>
+
+> **ℹ️ Derivative Version Notice**
+>
+> This repository is a **modified version** of [SakiRinn/LiveCaptions-Translator](https://github.com/SakiRinn/LiveCaptions-Translator), released under the Apache License 2.0.
+>
+> **Original project (原作):** https://github.com/SakiRinn/LiveCaptions-Translator
+>
+> **What's changed in this version:**
+> - 🎤 **Voice Input** — automatically types the live-caption recognition / translation result into the currently focused window (global hotkey toggle, translated-text mode and original-text mode, configurable hotkey).
+> - 🌐 **Full Chinese localization** — all UI text translated to Chinese with instant English/Chinese switching.
+>
+> Copyright for the original code belongs to SakiRinn and other contributors (see [LICENSE](LICENSE)).
 
 ## Overview
 

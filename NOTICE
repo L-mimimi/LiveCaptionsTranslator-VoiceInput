@@ -1,0 +1,16 @@
+LiveCaptionsTranslator-VoiceInput
+================================
+
+This product is a modified version of SakiRinn/LiveCaptions-Translator
+(https://github.com/SakiRinn/LiveCaptions-Translator),
+Copyright 2024 SakiRinn and other contributors,
+licensed under the Apache License, Version 2.0.
+
+Modifications made by L-mimimi:
+- Added voice input feature (types live-caption recognition / translation
+  results into the currently focused window; global hotkey toggle;
+  translated-text and original-text modes; configurable hotkey).
+- Added full Chinese localization with instant English/Chinese switching.
+- Fixed SendInput keyboard injection structure for 64-bit systems.
+
+A copy of the Apache License 2.0 is included in the LICENSE file.
