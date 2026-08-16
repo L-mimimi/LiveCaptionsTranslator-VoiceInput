@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:LiveCaptionsTranslator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Title="Getting Started"
+    Title="{DynamicResource Wel.Title}"
     Width="700"
     Height="490"
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
@@ -29,9 +29,7 @@
             ShowMaximize="False"
             ShowMinimize="False">
             <ui:TitleBar.Header>
-                <ui:TextBlock Padding="15,0,0,0" VerticalAlignment="Center">
-                    Getting Started
-                </ui:TextBlock>
+                <ui:TextBlock Padding="15,0,0,0" VerticalAlignment="Center" Text="{DynamicResource Wel.Title}" />
             </ui:TitleBar.Header>
         </ui:TitleBar>
 
@@ -41,32 +39,32 @@
                 HorizontalAlignment="Left"
                 FontSize="24"
                 FontWeight="Bold"
-                Text="Welcome to LiveCaptions Translator!"
+                Text="{DynamicResource Wel.Welcome}"
                 TextAlignment="Left" />
             <ui:TextBlock
                 Margin="20,10,20,10"
                 TextAlignment="Left"
                 TextWrapping="Wrap">
-                <Run Text="LiveCaptions Translator is based on Windows LiveCaptions." />
-                <Run Text="Before your first running, you need to configure it according to the following steps:&#x0A;" />
-                <Run Text="&#x0A;1. Open Windows LiveCaptions and follow the guide to download the necessary files for on-device speech recognition and language packs." />
-                <Run Text="&#x0A;2. Click the" />
-                <Run FontWeight="Bold" Text="⚙️ gear" />
-                <Run Text="icon in Windows LiveCaptions to open the settings menu, and select" />
-                <Run FontWeight="Bold" Text="&quot;Position &gt; Overlaid on screen&quot;" />
-                <Run Text=".&#x0A;3. Click the" />
-                <Run FontWeight="Bold" Text="&quot;Hide&quot;" />
-                <Run Text="button located in the setting page of LiveCaptions Translator to hide Windows LiveCaptions.&#x0A;" />
-                <Run Text="&#x0A;The program has automatically navigated to the setting page and opened Windows LiveCaptions." />
-                <Run Text="After completing the configuration, you can switch back to the main page and enjoy real-time audio translation.&#x0A;" />
-                <Run Text="&#x0A;For more details, visit our wiki: " />
+                <Run Text="{DynamicResource Wel.R1}" />
+                <Run Text="{DynamicResource Wel.R2}" />
+                <Run Text="{DynamicResource Wel.R3}" />
+                <Run Text="{DynamicResource Wel.R4}" />
+                <Run FontWeight="Bold" Text="{DynamicResource Wel.R5}" />
+                <Run Text="{DynamicResource Wel.R6}" />
+                <Run FontWeight="Bold" Text="{DynamicResource Wel.R7}" />
+                <Run Text="{DynamicResource Wel.R8}" />
+                <Run FontWeight="Bold" Text="{DynamicResource Wel.R9}" />
+                <Run Text="{DynamicResource Wel.R10}" />
+                <Run Text="{DynamicResource Wel.R11}" />
+                <Run Text="{DynamicResource Wel.R12}" />
+                <Run Text="{DynamicResource Wel.R13}" />
                 <Hyperlink NavigateUri="https://github.com/SakiRinn/LiveCaptions-Translator/wiki" RequestNavigate="Hyperlink_RequestNavigate">
                     https://github.com/SakiRinn/LiveCaptions-Translator/wiki
                 </Hyperlink>
-                <Run FontWeight="Bold" Text="&#x0A;&#x0A;Tip:" />
-                <Run Text="To change the" />
-                <Run FontWeight="DemiBold" TextDecorations="Underline" Text="Source Language" />
-                <Run Text=", please [Show] LiveCaptions on the setting page and do it in Windows LiveCaptions." />
+                <Run FontWeight="Bold" Text="{DynamicResource Wel.Tip}" />
+                <Run Text="{DynamicResource Wel.R14}" />
+                <Run FontWeight="DemiBold" TextDecorations="Underline" Text="{DynamicResource Wel.R15}" />
+                <Run Text="{DynamicResource Wel.R16}" />
             </ui:TextBlock>
 
             <ui:Button
@@ -74,7 +72,7 @@
                 Padding="30,10,30,10"
                 HorizontalAlignment="Center"
                 Click="CloseButton_Click"
-                Content="I have fully understood and configured." />
+                Content="{DynamicResource Wel.Button}" />
         </StackPanel>
     </Grid>
 </ui:FluentWindow>

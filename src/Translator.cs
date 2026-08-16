@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Automation;
@@ -17,6 +17,8 @@ namespace LiveCaptionsTranslator
 
         private static readonly Queue<string> pendingTextQueue = new();
         private static readonly TranslationTaskQueue translationTaskQueue = new();
+
+        private static string? lastVoiceOriginal = null;
 
         public static AutomationElement? Window
         {
@@ -131,6 +133,7 @@ namespace LiveCaptionsTranslator
                 if (string.CompareOrdinal(Caption.OriginalCaption, latestCaption) != 0)
                 {
                     Caption.OriginalCaption = latestCaption;
+                    VoiceInput.OnOriginalCaption(Caption.OriginalCaption);
 
                     idleCount = 0;
                     if (Array.IndexOf(TextUtil.PUNC_EOS, Caption.OriginalCaption[^1]) != -1)
@@ -164,7 +167,7 @@ namespace LiveCaptionsTranslator
                 // Check LiveCaptions.exe still alive
                 if (Window == null)
                 {
-                    Caption.DisplayTranslatedCaption = "[WARNING] LiveCaptions was unexpectedly closed, restarting...";
+                    Caption.DisplayTranslatedCaption = Localization.T("TR.LiveCaptionsClosed");
                     Window = LiveCaptionsHandler.LaunchLiveCaptions();
                     Caption.DisplayTranslatedCaption = "";
                 }
@@ -194,13 +197,22 @@ namespace LiveCaptionsTranslator
         {
             while (true)
             {
-                var (translatedText, isChoke) = translationTaskQueue.Output;
+                var (translatedText, isChoke, originalText) = translationTaskQueue.Output;
+
+                // Voice input: type the translation into the focused window
+                // whenever a new sentence has been translated.
+                if (!LogOnlyFlag && !string.IsNullOrEmpty(translatedText) &&
+                    string.CompareOrdinal(originalText, lastVoiceOriginal) != 0)
+                {
+                    lastVoiceOriginal = originalText;
+                    VoiceInput.OnTranslated(originalText, translatedText, isChoke);
+                }
 
                 if (LogOnlyFlag)
                 {
                     Caption.TranslatedCaption = string.Empty;
-                    Caption.DisplayTranslatedCaption = "[Paused]";
-                    Caption.OverlayNoticePrefix = "[Paused]";
+                    Caption.DisplayTranslatedCaption = Localization.T("TR.Paused");
+                    Caption.OverlayNoticePrefix = Localization.T("TR.Paused");
                     Caption.OverlayCurrentTranslation = string.Empty;
                 }
                 else if (!string.IsNullOrEmpty(RegexPatterns.NoticePrefix().Replace(
@@ -218,7 +230,8 @@ namespace LiveCaptionsTranslator
                     else
                     {
                         var match = RegexPatterns.NoticePrefixAndTranslation().Match(Caption.TranslatedCaption);
-                        Caption.OverlayNoticePrefix = match.Groups[1].Value.Trim();
+                        Caption.OverlayNoticePrefix = (VoiceInput.Enabled ? Localization.T("VI.OverlayPrefix") : "") +
+                            match.Groups[1].Value.Trim();
                         Caption.OverlayCurrentTranslation = match.Groups[2].Value.Trim();
                     }
                 }
@@ -295,7 +308,7 @@ namespace LiveCaptionsTranslator
             }
             catch (Exception ex)
             {
-                SnackbarHost.Show("[ERROR] Logging history failed.", ex.Message, SnackbarType.Error,
+                SnackbarHost.Show(Localization.T("TR.LogFailed"), ex.Message, SnackbarType.Error,
                     timeout: 2, closeButton: true);
             }
         }
@@ -315,7 +328,7 @@ namespace LiveCaptionsTranslator
             }
             catch (Exception ex)
             {
-                SnackbarHost.Show("[ERROR] Logging history failed.", ex.Message, SnackbarType.Error,
+                SnackbarHost.Show(Localization.T("TR.LogFailed"), ex.Message, SnackbarType.Error,
                     timeout: 2, closeButton: true);
             }
         }

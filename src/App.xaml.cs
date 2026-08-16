@@ -1,6 +1,7 @@
-﻿using System.Windows;
+using System.Windows;
 
 using LiveCaptionsTranslator.utils;
+using Localization = global::LiveCaptionsTranslator.utils.Localization;
 
 namespace LiveCaptionsTranslator
 {
@@ -14,6 +15,12 @@ namespace LiveCaptionsTranslator
             Task.Run(() => Translator.SyncLoop());
             Task.Run(() => Translator.TranslateLoop());
             Task.Run(() => Translator.DisplayLoop());
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            Localization.Apply(Translator.Setting?.Language);
         }
 
         private static void OnProcessExit(object sender, EventArgs e)

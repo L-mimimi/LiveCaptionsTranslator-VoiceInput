@@ -1,17 +1,17 @@
-﻿namespace LiveCaptionsTranslator.models
+namespace LiveCaptionsTranslator.models
 {
     public class TranslationTaskQueue
     {
         private readonly object _lock = new object();
         private readonly List<TranslationTask> tasks;
 
-        private (string translatedText, bool isChoke) output;
-        public (string translatedText, bool isChoke) Output => output;
+        private (string translatedText, bool isChoke, string originalText) output;
+        public (string translatedText, bool isChoke, string originalText) Output => output;
 
         public TranslationTaskQueue()
         {
             tasks = new List<TranslationTask>();
-            output = (string.Empty, false);
+            output = (string.Empty, false, string.Empty);
         }
 
         public void Enqueue(Func<CancellationToken, Task<(string, bool)>> worker, string originalText)
@@ -39,7 +39,8 @@
                     tasks.RemoveAt(i);
             }
 
-            output = translationTask.Task.Result;
+            output = (translationTask.Task.Result.Item1, translationTask.Task.Result.Item2,
+                translationTask.OriginalText);
             var translatedText = output.Item1;
 
             // Log after translation.

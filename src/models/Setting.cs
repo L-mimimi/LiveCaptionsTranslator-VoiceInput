@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -6,6 +7,7 @@ using System.Text.Json.Serialization;
 using System.Windows;
 
 using LiveCaptionsTranslator.apis;
+using LiveCaptionsTranslator.utils;
 
 namespace LiveCaptionsTranslator.models
 {
@@ -25,6 +27,12 @@ namespace LiveCaptionsTranslator.models
         private string targetLanguage;
         private string prompt;
         private string? ignoredUpdateVersion;
+
+        private VoiceInputMode voiceInputMode = VoiceInputMode.Off;
+        private bool voiceInputHalfSentence = true;
+        private string voiceInputHotkey = "Ctrl+Alt+V";
+        private string language = CultureInfo.CurrentUICulture.Name
+            .StartsWith("zh", StringComparison.OrdinalIgnoreCase) ? "zh-CN" : "en";
 
         private MainWindowState mainWindowState;
         private OverlayWindowState overlayWindowState;
@@ -105,6 +113,43 @@ namespace LiveCaptionsTranslator.models
             {
                 ignoredUpdateVersion = value;
                 OnPropertyChanged("IgnoredUpdateVersion");
+            }
+        }
+
+        public VoiceInputMode VoiceInputMode
+        {
+            get => voiceInputMode;
+            set
+            {
+                voiceInputMode = value;
+                OnPropertyChanged("VoiceInputMode");
+            }
+        }
+        public bool VoiceInputHalfSentence
+        {
+            get => voiceInputHalfSentence;
+            set
+            {
+                voiceInputHalfSentence = value;
+                OnPropertyChanged("VoiceInputHalfSentence");
+            }
+        }
+        public string VoiceInputHotkey
+        {
+            get => voiceInputHotkey;
+            set
+            {
+                voiceInputHotkey = value;
+                OnPropertyChanged("VoiceInputHotkey");
+            }
+        }
+        public string Language
+        {
+            get => language;
+            set
+            {
+                language = value;
+                OnPropertyChanged("Language");
             }
         }
 

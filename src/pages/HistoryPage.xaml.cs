@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
@@ -7,6 +7,7 @@ using Wpf.Ui.Controls;
 
 using LiveCaptionsTranslator.models;
 using LiveCaptionsTranslator.utils;
+using Localization = global::LiveCaptionsTranslator.utils.Localization;
 using TextBlock = System.Windows.Controls.TextBlock;
 
 namespace LiveCaptionsTranslator
@@ -69,13 +70,13 @@ namespace LiveCaptionsTranslator
             {
                 Title = new TextBlock
                 {
-                    Text = "Do you want to delete all history?",
+                    Text = Localization.T("Hist.DelTitle"),
                     FontSize = 18,
                     FontWeight = FontWeights.Regular
                 },
-                Content = "This operation cannot be undone!",
-                PrimaryButtonText = "Yes",
-                CloseButtonText = "No",
+                Content = Localization.T("Hist.DelContent"),
+                PrimaryButtonText = Localization.T("Common.Yes"),
+                CloseButtonText = Localization.T("Common.No"),
                 DefaultButton = ContentDialogButton.Close,
                 DialogHost = dialogHostContainer,
                 Padding = new Thickness(8, 4, 8, 8),
@@ -127,11 +128,15 @@ namespace LiveCaptionsTranslator
                 try
                 {
                     await SQLiteHistoryLogger.ExportToCSV(saveFileDialog.FileName);
-                    SnackbarHost.Show("Saved Success.", $"File saved to: {saveFileDialog.FileName}", SnackbarType.Success);
+                    SnackbarHost.Show(Localization.T("Hist.Saved"),
+                        string.Format(Localization.T("Hist.SavedTo"), saveFileDialog.FileName),
+                        SnackbarType.Success);
                 }
                 catch (Exception ex)
                 {
-                    SnackbarHost.Show("Save Failed.", $"File saved faild:{ex.Message}", SnackbarType.Error);
+                    SnackbarHost.Show(Localization.T("Hist.SaveFailed"),
+                        string.Format(Localization.T("Hist.SaveFailedMsg"), ex.Message),
+                        SnackbarType.Error);
                 }
             }
         }

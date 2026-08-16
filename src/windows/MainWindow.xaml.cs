@@ -1,10 +1,12 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Interop;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
 using LiveCaptionsTranslator.utils;
+using Localization = global::LiveCaptionsTranslator.utils.Localization;
 using LiveCaptionsTranslator.Utils;
 using Button = Wpf.Ui.Controls.Button;
 
@@ -20,6 +22,8 @@ namespace LiveCaptionsTranslator
             InitializeComponent();
             ApplicationThemeManager.ApplySystemTheme();
 
+            VoiceInput.Toggled += () => UpdateVoiceInputButtonState();
+
             Loaded += (s, e) =>
             {
                 SystemThemeWatcher.Watch(this, WindowBackdropType.Mica, true);
@@ -27,6 +31,15 @@ namespace LiveCaptionsTranslator
                 IsAutoHeight = true;
                 CheckForFirstUse();
                 CheckForUpdates();
+
+                // Register the global voice-input hotkey.
+                var hwnd = new WindowInteropHelper(this).Handle;
+                HwndSource.FromHwnd(hwnd).AddHook(WndProc);
+                if (!VoiceInput.RegisterHotkey(hwnd, Translator.Setting!.VoiceInputHotkey))
+                    SnackbarHost.Show(Localization.T("Main.HotkeyWarning.Title"),
+                        string.Format(Localization.T("Main.HotkeyWarning.Msg"),
+                            Translator.Setting.VoiceInputHotkey),
+                        SnackbarType.Warning, timeout: 2, closeButton: true);
             };
 
             double screenWidth = SystemParameters.PrimaryScreenWidth;
@@ -49,6 +62,31 @@ namespace LiveCaptionsTranslator
         private void TopmostButton_Click(object sender, RoutedEventArgs e)
         {
             ToggleTopmost(!this.Topmost);
+        }
+
+        private void VoiceInputButton_Click(object sender, RoutedEventArgs e)
+        {
+            VoiceInput.Toggle();
+            UpdateVoiceInputButtonState();
+        }
+
+        private void UpdateVoiceInputButtonState()
+        {
+            var button = VoiceInputButton as Button;
+            var symbolIcon = button?.Icon as SymbolIcon;
+            if (symbolIcon != null)
+                symbolIcon.Filled = VoiceInput.Enabled;
+        }
+
+        private nint WndProc(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
+        {
+            if (msg == VoiceInput.WM_HOTKEY && wParam.ToInt32() == VoiceInput.HOTKEY_ID)
+            {
+                VoiceInput.Toggle();
+                UpdateVoiceInputButtonState();
+                handled = true;
+            }
+            return nint.Zero;
         }
 
         private void OverlayModeButton_Click(object sender, RoutedEventArgs e)
@@ -180,7 +218,7 @@ namespace LiveCaptionsTranslator
             }
             catch (Exception ex)
             {
-                SnackbarHost.Show("[ERROR] Update Check Failed.", ex.Message, SnackbarType.Error,
+                SnackbarHost.Show(Localization.T("Main.UpdateCheckFailed.Title"), ex.Message, SnackbarType.Error,
                     timeout: 2, closeButton: true);
 
                 return;
@@ -194,12 +232,11 @@ namespace LiveCaptionsTranslator
             {
                 var dialog = new Wpf.Ui.Controls.MessageBox
                 {
-                    Title = "New Version Available",
-                    Content = $"A new version has been detected: {latestVersion}\n" +
-                              $"Current version: {currentVersion}\n" +
-                              $"Please visit GitHub to download the latest release.",
-                    PrimaryButtonText = "Update",
-                    CloseButtonText = "Ignore this version"
+                    Title = Localization.T("Main.NewVersion.Title"),
+                    Content = string.Format(Localization.T("Main.NewVersion.Content"),
+                        latestVersion, currentVersion),
+                    PrimaryButtonText = Localization.T("Main.NewVersion.Update"),
+                    CloseButtonText = Localization.T("Main.NewVersion.Ignore")
                 };
                 var result = await dialog.ShowDialogAsync();
 
@@ -216,7 +253,7 @@ namespace LiveCaptionsTranslator
                     }
                     catch (Exception ex)
                     {
-                        SnackbarHost.Show("[ERROR] Open Browser Failed.", ex.Message, SnackbarType.Error,
+                        SnackbarHost.Show(Localization.T("Main.OpenBrowserFailed.Title"), ex.Message, SnackbarType.Error,
                             timeout: 2, closeButton: true);
                     }
                 }
